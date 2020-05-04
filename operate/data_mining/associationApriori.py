@@ -60,6 +60,7 @@ class AprioriAssociationEdit(QWidget):
         global_var.currentTask.support = eval(self.input_supp.text())
         global_var.currentTask.confidence = eval(self.input_conf.text())
         global_var.currentTask.lift = eval(self.input_lift.text())
+        global_var.currentTask.resultType = global_var.DataMiningType.ASSOCIATION
         global_var.currentTask.operateList.append(global_var.allOperateList[1][0])
         self.addTask_.emit(global_var.allOperateList[1][0])
 
@@ -84,9 +85,21 @@ def apriori_association(taskData):
     min_supp = global_var.currentTask.support
     min_conf = global_var.currentTask.confidence
     min_lift = global_var.currentTask.lift
-    transactions = data.to_numpy()
-    ap = list(apriori(transactions=transactions))
-                     # min_support=min_supp,min_confidence=min_conf, min_lift=min_lift))
+    # transactions = data.to_numpy()
+    items = (data['0'].unique())
+    encoded_vals = []
+    for index, row in data.iterrows():
+        labels = {}
+        uncommons = list(set(items) - set(row))
+        commons = list(set(items).intersection(row))
+        for uc in uncommons:
+            labels[uc] = 0
+        for com in commons:
+            labels[com] = 1
+        encoded_vals.append(labels)
+    ohe_df = pd.DataFrame(encoded_vals)
+    ap = list(apriori(transactions=ohe_df,
+                      min_support=min_supp, min_confidence=min_conf, min_lift=min_lift))
     # 支持度（support），先输入空列表，再进行赋值
     supports = []
     # 置信度
@@ -113,11 +126,11 @@ def apriori_association(taskData):
         'base': bases,
         'add': adds
     })
-    result = result[~result['base'].isin(['[]'])]  # 删去base为空值的规则
-
-    # 选择支持度大于0.1，自信度大于0.3
-    res = result[(result.lift > 0.0) & (result.support > 0.1) & (result.confidence > 0.3)]
-    res = res.reset_index(drop=True)  # 重置索引
+    # result = result[~result['base'].isin(['[]'])]  # 删去base为空值的规则
+    #
+    # # 选择支持度大于0.1，自信度大于0.3
+    # res = result[(result.lift > 0.0) & (result.support > 0.1) & (result.confidence > 0.3)]
+    # res = res.reset_index(drop=True)  # 重置索引
     associaResult = global_var.ResultAssociation()
-    associaResult.rule = res
+    associaResult.rule = result
     global_var.currentTask.result = associaResult
