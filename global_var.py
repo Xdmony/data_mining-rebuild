@@ -52,17 +52,24 @@ class DataSet:
 
 # 关联分析结果
 class ResultAssociation:
-    pass
+    def __init__(self):
+        self.rule = pd.DataFrame()
 
 
 # 分类分析结果
 class ResultClassify:
-    pass
+    def __init__(self):
+        self.model = None
+        self.data_test = pd.DataFrame()
+        self.data_predict = pd.DataFrame()
+        self.columns = list()
 
 
 # 聚类分析结果
 class ResultCluster:
-    pass
+    def __init__(self):
+        self.model = None
+        self.data = pd.DataFrame()
 
 
 # 回归分析结果
@@ -83,7 +90,14 @@ class TaskInfo:
         self.taskData = DataSet()  # 任务数据集，原始数据，任务不会对其更改
         self.operateData = DataSet()  # 数据，每执行一个预处理任务都会对其进行操作，由数据添加初始化
         self.operateList = list()  # 任务列表，存储进行的数据预处理，数据挖掘，可视化等操作
+
         self.scale = 0.3  # 样本占比，默认7：3
+        self.K = 4  # 聚类集群个数
+        # 关联规则参数
+        self.support = 0.01
+        self.confidence = 0.0
+        self.lift = 0.0
+
         self.resultType = None  # 数据挖掘类型
         self.result = None  # 分析结果
 

@@ -83,9 +83,10 @@ class DataTail(QWidget):
             checkbox = self.findChild(QCheckBox, feature)
             if checkbox.isChecked():
                 X.append(feature)
-        y = self.target_combo.currentText()
         columns = X
-        columns.append(y)
+        if "" != self.target_combo.currentText():
+            y = self.target_combo.currentText()
+            columns.append(y)
         global_var.currentTask.operateData.dataColumns = columns
         data = pd.DataFrame()
         for feature in columns:

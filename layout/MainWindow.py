@@ -22,7 +22,7 @@ from layout.widgets.dataList import List
 from layout.widgets.opearateTabs import OperateTab
 from layout.widgets.operateList import OperateList
 from layout.widgets.dataTail import DataTail
-from operate.data_mining import linearRegression
+from operate.data_mining import linearRegression, decideTreeClassifier, k_meansCluster, associationApriori
 
 
 class MainWindow(QWidget):
@@ -192,11 +192,14 @@ class MainWindow(QWidget):
         elif operate == operateList[0][4]:  # 特征提取
             pass
         elif operate == operateList[1][0]:  # 关联分析
-            pass
+            tab = associationApriori.AprioriAssociationEdit()
+            tab.addTask_.connect(self.add_task)
         elif operate == operateList[2][0]:  # 聚类分析
-            pass
+            tab = k_meansCluster.ClusterEdit()
+            tab.addTask_.connect(self.add_task)
         elif operate == operateList[3][0]:  # 分类分析
-            pass
+            tab = decideTreeClassifier.DTC_Edit()
+            tab.addTask_.connect(self.add_task)
         elif operate == operateList[4][0]:  # 回归分析
             tab = linearRegression.LinearEdit()
             tab.addTask_.connect(self.add_task)
@@ -223,11 +226,14 @@ class MainWindow(QWidget):
                 controller.execute(operate)
         # 显示结果tab
         if global_var.currentTask.resultType == global_var.DataMiningType.ASSOCIATION:
-            pass
+            result_tab = associationApriori.AprioriAssociationOut(global_var.currentTask.result)
+            self.operateEdit.add_Tab(result_tab, "result-apriori关联规则")
         if global_var.currentTask.resultType == global_var.DataMiningType.CLUSTER:
-            pass
+            result_tab = k_meansCluster.ClusterOut(global_var.currentTask.result)
+            self.operateEdit.add_Tab(result_tab, "result-Kmeans聚类")
         if global_var.currentTask.resultType == global_var.DataMiningType.CLASSIFY:
-            pass
+            result_tab = decideTreeClassifier.DTC_Out(global_var.currentTask.result)
+            self.operateEdit.add_Tab(result_tab, "result-决策树分类")
         if global_var.currentTask.resultType == global_var.DataMiningType.REGRESSION:
             result_tab = linearRegression.LinearOut(global_var.currentTask.result)
             self.operateEdit.add_Tab(result_tab, "result-线性回归")
