@@ -9,10 +9,13 @@
 """
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import *
+from pyecharts.commons.utils import JsCode
 from sklearn import linear_model, model_selection
 import pandas as pd
 import numpy as np
 from math import sqrt
+from pyecharts import options as opts
+from pyecharts.charts import Scatter
 
 import global_var
 from layout.widgets.dataTable import DataTable
@@ -136,3 +139,17 @@ def linear_regression(taskData):
     result.data_predict = data_predict
     result.columns = columns
     global_var.currentTask.result = result  # 结果保存
+    # 可视化图表
+    # Scatter().add_xaxis(xaxis_data=y_test).add_yaxis("实际值", y_test).add_yaxis("预测值", y_predict).render("linear.html")
+    x = data_test.iloc[:, -1]
+    y1 = x
+    y2 = data_predict.iloc[:, -1]
+    Scatter() \
+        .add_xaxis(x) \
+        .add_yaxis(
+        "实际值",
+        y1,
+    ).add_yaxis(
+        "预测值",
+        y2,
+    ).render("linear.html")
