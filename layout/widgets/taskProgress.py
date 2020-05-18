@@ -19,15 +19,15 @@ class TaskProgress(QWidget):
         super(TaskProgress, self).__init__()
         self.taskList = QListWidget()  # 列表框控件，显示任务流程
         self.taskList.setFlow(QListView.LeftToRight)  # 设置List样式
-        self.btn_add = QPushButton("+")  # 添加任务框
-        self.btn_add.clicked.connect(self.add_task_input)
+        # self.btn_add = QPushButton("+")  # 添加任务框
+        # self.btn_add.clicked.connect(self.add_task_input)
         self.btn_clear = QPushButton("clear")  # 清空任务
         self.btn_clear.clicked.connect(self.task_clear)
         # 布局设置
         layout = QHBoxLayout()
         layout.addWidget(self.taskList)
         layout.addWidget(self.btn_clear)
-        layout.addWidget(self.btn_add)
+        # layout.addWidget(self.btn_add)
         layout.setStretch(0, 6)
         layout.setStretch(1, 1)
         layout.setStretch(2, 1)

@@ -7,7 +7,10 @@
 """
 文件说明：线性回归Tab，和处理
 """
-from PyQt5.QtCore import pyqtSignal
+import sys
+
+from PyQt5.QtCore import pyqtSignal, QUrl
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import *
 from pyecharts.commons.utils import JsCode
 from sklearn import linear_model, model_selection
@@ -153,3 +156,20 @@ def linear_regression(taskData):
         "预测值",
         y2,
     ).render("linear.html")
+
+
+class LinearVisual(QWidget):
+    def __init__(self):
+        super(LinearVisual, self).__init__()
+        self.browser = QWebEngineView()
+        self.browser.load(QUrl('linear.html'))
+        layout = QVBoxLayout()
+        layout.addWidget(self.browser)
+        self.setLayout(layout)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    win = LinearVisual()
+    win.show()
+    app.exit(app.exec_())

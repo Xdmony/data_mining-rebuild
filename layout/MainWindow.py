@@ -236,7 +236,9 @@ class MainWindow(QWidget):
             self.operateEdit.add_Tab(result_tab, "result-决策树分类")
         if global_var.currentTask.resultType == global_var.DataMiningType.REGRESSION:
             result_tab = linearRegression.LinearOut(global_var.currentTask.result)
+            visual = linearRegression.LinearVisual()
             self.operateEdit.add_Tab(result_tab, "result-线性回归")
+            self.operateEdit.add_Tab(visual, "线性回归可视化")
 
 
 if __name__ == '__main__':
