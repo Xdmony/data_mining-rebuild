@@ -8,17 +8,21 @@
 文件说明：线性回归Tab，和处理
 """
 import sys
+import webbrowser
 
-from PyQt5.QtCore import pyqtSignal, QUrl
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtCore import *
+# from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from pyecharts.commons.utils import JsCode
 from sklearn import linear_model, model_selection
 import pandas as pd
 import numpy as np
 from math import sqrt
-from pyecharts import options as opts
 from pyecharts.charts import Scatter
+from pyecharts.render import make_snapshot
+from snapshot_pyppeteer import snapshot
+# import cv2
+from PIL import Image
 
 import global_var
 from layout.widgets.dataTable import DataTable
@@ -156,16 +160,37 @@ def linear_regression(taskData):
         "预测值",
         y2,
     ).render("linear.html")
+    # imgkit.from_file("./linear.html", "./linear.jpg")
+    make_snapshot(snapshot, "./linear.html", "./linear.png")
+    # img = cv2.imread("./linear.png")
+    img = Image.open("./linear.png")
+    re_img = img.resize((450, 400), Image.BILINEAR)
+    # cv2.imwrite("./linear_resize.png", re_img)
+    re_img.save("./linear_resize.png")
 
 
 class LinearVisual(QWidget):
     def __init__(self):
         super(LinearVisual, self).__init__()
-        self.browser = QWebEngineView()
-        self.browser.load(QUrl('linear.html'))
+        # self.browser = QWebEngineView()
+        # self.browser.load(QUrl('./linear.html'))
         layout = QVBoxLayout()
-        layout.addWidget(self.browser)
+        pic_label = QLabel()
+        pix = QPixmap("./linear_resize.png")
+        pic_label.setPixmap(pix)
+        pic_label.setScaledContents(False)
+        pix.scaled(450, 400, aspectRatioMode=Qt.KeepAspectRatio)
+        btn = QPushButton("show in browser")
+        btn.clicked.connect(self.show_in_browser)
+        # layout.addWidget(self.browser)
+        layout.addWidget(pic_label)
+        layout.addWidget(btn)
         self.setLayout(layout)
+
+    def show_in_browser(self):
+        import os
+        url = "file://" + os.path.abspath("./linear.html")
+        webbrowser.get('chrome').open(url, new=2)
 
 
 if __name__ == '__main__':
